@@ -15,6 +15,7 @@ function App() {
 
   const [newTask, setNewTask] =  useState({title: "", description: ""});
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [newDescription, setNewDescription] = useState("");
 
 
   const fetchTasks = async () => {
@@ -59,12 +60,14 @@ function App() {
   
   }
 
-  // const updateTask = async (id: number, updatedTask: Partial<Task>) => {
-  //   const { error } = await supabase.from("tasks").update(updatedTask).eq('id', id);
-  //   if (error) {
-  //     console.log("Error updating task:", error.message);
-  //   }
-  // }
+  const updateTask = async (id: number) => {
+    const { error } = await supabase.from("tasks").update({ description: newDescription }).eq('id', id);
+    if (error) {
+      console.log("Error updating task:", error.message);
+    }
+  }
+
+
   return(
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "1rem" }}>
       <h2>Task Manager CRUD</h2>
@@ -103,7 +106,8 @@ function App() {
               <h3>{task.title}</h3>
               <p>{task.description}</p>
               <div>
-                <button style={{ padding: "0.5rem 1rem", marginRight: "0.5rem" }} >
+                <textarea placeholder="updated description..." onChange={(e) => setNewDescription(e.target.value)}></textarea>
+                <button style={{ padding: "0.5rem 1rem", marginRight: "0.5rem" }} onClick={() => updateTask(task.id)}>
                   Edit
                 </button>
                 <button style={{ padding: "0.5rem 1rem" }} onClick={() => deleteTask(task.id)}>Delete</button>
